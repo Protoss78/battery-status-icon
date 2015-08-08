@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/device-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+
+<dom-module id="battery-status-icon">
+    <style>
+    :host {
+        display: block;
+    }
+    </style>
+    <template>
+        <div><iron-icon icon="[[icon]]"></iron-icon><span hidden$="[[!showLabel]]">{{getLabel(level)}}</span></div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: 'battery-status-icon',
+    properties: {
+        showLabel: {
+            type: Boolean,
+            value: false
+        },
+        level: {
+            type: Number
+        },
+        charging: {
+            type: Boolean,
+            value: false
+        },
+        icon: {
+            type: String,
+            value: "device:battery-unknown",
+            computed: "calculateIcon(level, charging)"
+        }
+    },
+    ready: function() {
+        this.battery = navigator.battery || navigator.webkitBattery || navigator.mozBattery;
+        if (this.battery) {
+            this.level = parseInt(this.battery.level * 100);
+            this.charging = this.battery.charging ? true : false;
+
+            this.battery.addEventListener('levelchange', this.onLevelChange.bind(this), false);
+            this.battery.addEventListener('chargingchange', this.onChargingChange.bind(this), false);
+            this.checkBattery();
+        } else {
+            console.log("Battery API not supported");
+            this.battery = null;
+        }
+    },
+    checkBattery: function() {
+        if (this.battery.charging) {
+            this.charging = true;
+        } else {
+            this.charging = false;
+        }
+    },
+    getLabel: function(level) {
+    	if (level === undefined || level === null)
+    		return "";
+    	return level + " %";
+    },
+    onChargingChange: function(event, detail, sender) {
+        console.log("chargingchange");
+        this.checkBattery();
+    },
+    onLevelChange: function(event, detail, sender) {
+        this.level = parseInt(this.battery.level * 100);
+    },
+    calculateIcon: function(level, charging) {
+        var value = "device:battery-";
+        if (this.charging)
+            value += "charging-"
+        if (this.level >= 95)
+            value += "full";
+        else if (this.level >= 90)
+            value += 90;
+        else if (this.level >= 80)
+            value += 80;
+        else if (this.level >= 60)
+            value += 60;
+        else if (this.level >= 50)
+            value += 50;
+        else if (this.level >= 30)
+            value += 20;
+        else if (this.level >= 20)
+            value += 20;
+        else if (this.level >= 0)
+            value += "alert";
+        else
+        	value += "unknown";
+        return value;
+    }
+});
+</script>

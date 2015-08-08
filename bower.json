@@ -13,7 +13,8 @@
     "icon",
     "polymer",
     "web",
-    "component"
+    "component",
+    "web component"
   ],
   "license": "MIT",
   "ignore": [

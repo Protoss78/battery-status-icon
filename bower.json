@@ -14,7 +14,8 @@
     "polymer",
     "web",
     "component",
-    "web component"
+    "web component",
+    "web-components"
   ],
   "license": "MIT",
   "ignore": [

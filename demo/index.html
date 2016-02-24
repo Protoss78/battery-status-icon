@@ -8,38 +8,85 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../battery-status-icon.html">
-    <link rel="import" href="../../paper-material/paper-material.html">
+    <link rel="import" href="../../paper-card/paper-card.html">
     <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
     <style>
-    body {
-        background-color: #F9F9F9;
-    }
-    paper-material {
-        max-width: 50%;
-        display: inline-block;
-        padding: 1em;
-        margin: 1em;
-    }
+        body {
+            background-color: #F9F9F9;
+        }
+
+        paper-card {
+            padding: 1em;
+            margin: 1em;
+        }
+
+        .horizontalpanel {
+            @apply(--layout-horizontal);
+        }
+
+        .flexme {
+            @apply(--layout-flex);
+        }
     </style>
 </head>
 
 <body unresolved>
-    <div class="layout horizontal flex wrap">
-        <paper-material>
-            <h1>No Label</h1>
-            <battery-status-icon></battery-status-icon>
-            <battery-status-icon level="33" charging></battery-status-icon>
-            <battery-status-icon level="15"></battery-status-icon>
-            <battery-status-icon level="66"></battery-status-icon>
-        </paper-material>
-        <paper-material>
-            <h1>With Label</h1>
-            <battery-status-icon></battery-status-icon>
-            <battery-status-icon level="33" charging show-label></battery-status-icon>
-            <battery-status-icon level="15" show-label></battery-status-icon>
-            <battery-status-icon level="66" show-label></battery-status-icon>
-        </paper-material>
-    </div>
+<paper-card>
+    <table>
+        <thead>
+        <th></th>
+        <th>Sample</th>
+        <th>Code</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Default</td>
+            <td>
+                <battery-status-icon></battery-status-icon>
+            </td>
+            <td>
+                <pre>&lt;battery-status-icon&gt;&lt;/battery-status-icon&gt;</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Manually set to 33% and charging</td>
+            <td>
+                <battery-status-icon level="33" charging></battery-status-icon>
+            </td>
+            <td>
+                <pre>&lt;battery-status-icon level="33" charging&gt;&lt;/battery-status-icon&gt;</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Manually set to 15% with label</td>
+            <td>
+                <battery-status-icon level="15" show-label></battery-status-icon>
+            </td>
+            <td>
+                <pre>&lt;battery-status-icon level="15" show-label&gt;&lt;/battery-status-icon&gt;</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Manually set to 66%</td>
+            <td>
+                <battery-status-icon level="66"></battery-status-icon>
+            </td>
+            <td>
+                <pre>&lt;battery-status-icon level="66"&gt;&lt;/battery-status-icon&gt;</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Autodetect using Navigator.getBattery() API with label</td>
+            <td>
+                <battery-status-icon autodetect show-label></battery-status-icon>
+            </td>
+            <td>
+                <pre>&lt;battery-status-icon autodetect show-label&gt;&lt;/battery-status-icon&gt;</pre>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</paper-card>
 </body>
 
 </html>

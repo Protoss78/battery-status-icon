@@ -27,6 +27,6 @@
   ],
   "dependencies": {
     "iron-icons": "PolymerElements/iron-icons#~1.0.3",
-    "paper-material": "PolymerElements/paper-material#~1.0.1"
+    "paper-card": "PolymerElements/paper-card#^1.1.1"
   }
 }

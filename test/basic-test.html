@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../battery-status-icon.html">
+</head>
+
+<body>
+    <paper-material>
+        <battery-status-icon id="default"></battery-status-icon>
+        <battery-status-icon id="testLevelCharging" level="33" charging></battery-status-icon>
+        <battery-status-icon id="testLevelLabel" level="15" show-label></battery-status-icon>
+        <battery-status-icon id="testLevelOnly" level="66"></battery-status-icon>
+        <battery-status-icon id="testAutodetectLabel" autodetect show-label></battery-status-icon>
+        <battery-status-icon id="testAutodetect" autodetect></battery-status-icon>
+    </paper-material>
+    <script>
+    suite('<battery-status-icon>', function() {
+        test('test default behavior', function() {
+            var element = document.querySelector('#default');
+            assert.equal(element.level, null);
+        });
+        test('test level and charging', function() {
+            var element = document.querySelector('#testLevelCharging');
+            assert.equal(element.level, 33);
+            assert.equal(element.charging, true);
+            assert.equal(element.showLabel, false);
+            assert.equal(element.autodetect, false);
+            assert.equal(element.label, '33%');
+        });
+        test('test level and label', function() {
+            var element = document.querySelector('#testLevelLabel');
+            assert.equal(element.level, 15);
+            assert.equal(element.charging, false);
+            assert.equal(element.showLabel, true);
+            assert.equal(element.autodetect, false);
+            assert.equal(element.label, '15%');
+        });
+        test('test level only', function() {
+            var element = document.querySelector('#testLevelOnly');
+            assert.equal(element.level, 66);
+            assert.equal(element.charging, false);
+            assert.equal(element.showLabel, false);
+            assert.equal(element.autodetect, false);
+            assert.equal(element.label, '66%');
+        });
+        test('test autodetect and label', function() {
+            var element = document.querySelector('#testAutodetectLabel');
+            assert.isNotNull(element.level);
+            assert.isNotNull(element.charging);
+            assert.equal(element.showLabel, true);
+            assert.equal(element.autodetect, true);
+            // Label must contain a % sign
+            assert.isTrue(element.label.indexOf('%') > -1);
+        });
+        test('test autodetect only', function() {
+            var element = document.querySelector('#testAutodetect');
+            assert.isNotNull(element.level);
+            assert.isNotNull(element.charging);
+            assert.equal(element.showLabel, false);
+            assert.equal(element.autodetect, true);
+            // Label must contain a % sign
+            assert.isTrue(element.label.indexOf('%') > -1);
+        });
+    });
+    </script>
+</body>
+
+</html>

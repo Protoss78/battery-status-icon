@@ -67,7 +67,8 @@ __Example:__
 			* @default NULL
 			*/
             level: {
-                type: Number
+                type: Number,
+                notify: true
             },
 			/**
 			* Detects if device is charging (Only works with autodetect)
@@ -78,7 +79,8 @@ __Example:__
 			*/
             charging: {
                 type: Boolean,
-                value: false
+                value: false,
+                notify: true
             },
 			/**
 			* Battery charging time in seconds
@@ -88,7 +90,8 @@ __Example:__
 			* @default NULL
 			*/
             chargingtime: {
-                type: Number
+                type: Number,
+                notify: true
             },
 			/**
 			* Battery discharging time in seconds
@@ -98,7 +101,8 @@ __Example:__
 			* @default NULL
 			*/
             dischargingtime: {
-                type: Number
+                type: Number,
+                notify: true
             },
 			/**
 			* Container for battery level icon name
@@ -109,8 +113,8 @@ __Example:__
 			*/
             icon: {
                 type: String,
-                value: "device:battery-unknown",
-                computed: "calculateIcon(level, charging)"
+                value: 'device:battery-unknown',
+                computed: 'calculateIcon(level, charging)'
             }
         },
         ready: function () {
@@ -151,19 +155,20 @@ __Example:__
 		* Adds percent sign to end of level value
 		*/
         getLabel: function (level) {
-            if (level === undefined || level === null)
-                return "";
-            return level + "%";
+            if (level === undefined || level === null) {
+                return '';
+            }
+            return level + '%';
         },
 		/**
 		* Calculate which icon suits needs best
 		*/
         calculateIcon: function (level, charging) {
-            var value = "device:battery-";
+            var value = 'device:battery-';
             if (this.charging)
-                value += "charging-"
+                value += 'charging-';
             if (this.level >= 95)
-                value += "full";
+                value += 'full';
             else if (this.level >= 90)
                 value += 90;
             else if (this.level >= 80)
@@ -177,9 +182,9 @@ __Example:__
             else if (this.level >= 20)
                 value += 20;
             else if (this.level >= 0)
-                value += "alert";
+                value += 'alert';
             else
-                value += "unknown";
+                value += 'unknown';
             return value;
         }
     });

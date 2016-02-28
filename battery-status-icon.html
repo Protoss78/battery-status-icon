@@ -30,7 +30,7 @@ __Example:__
     <template>
         <div>
             <iron-icon icon="[[icon]]"></iron-icon>
-            <span class="label" hidden$="[[!showLabel]]">{{getLabel(level)}}</span></div>
+            <span class="label" hidden$="[[!showLabel]]">{{label}}</span></div>
     </template>
 </dom-module>
 <script>
@@ -115,6 +115,10 @@ __Example:__
                 type: String,
                 value: 'device:battery-unknown',
                 computed: 'calculateIcon(level, charging)'
+            },
+            label: {
+                type: String,
+                computed: 'getLabel(level)'
             }
         },
         ready: function () {

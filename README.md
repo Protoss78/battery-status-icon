@@ -18,4 +18,4 @@ Example:
     <battery-status-icon autodetect show-label></battery-status-icon>
 </paper-material>
 ```
-![Preview](preview.png)
+![Preview](https://github.com/Protoss78/battery-status-icon/raw/master/preview.png)

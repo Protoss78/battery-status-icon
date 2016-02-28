@@ -2,47 +2,111 @@
 <link rel="import" href="../iron-icons/device-icons.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <!--
+__Example:__
+
+    <paper-material>
+      <h1>No Label</h1>
+      <battery-status-icon></battery-status-icon>
+      <battery-status-icon level="33" charging></battery-status-icon>
+      <battery-status-icon level="15" show-label></battery-status-icon>
+      <battery-status-icon level="66"></battery-status-icon>
+      <battery-status-icon autodetect show-label></battery-status-icon>
+    </paper-material>
+
 @element battery-status-icon
-@demo http://protoss78.github.io/battery-status-icon/
+@demo demo/index.html
 -->
 <dom-module id="battery-status-icon">
     <style>
         :host {
             display: block;
         }
+		.label {
+			top: 2px;
+			position: relative;
+			font-family: "Roboto Condensed", sans-serif;
+		}
     </style>
     <template>
         <div>
             <iron-icon icon="[[icon]]"></iron-icon>
-            <span hidden$="[[!showLabel]]">{{getLabel(level)}}</span></div>
+            <span class="label" hidden$="[[!showLabel]]">{{getLabel(level)}}</span></div>
     </template>
 </dom-module>
 <script>
     Polymer({
         is: 'battery-status-icon',
         properties: {
+			/**
+			* Shows label if true (set to true with show-label)
+			*
+			* @attribute showLabel
+			* @type Boolean
+			* @default false
+			*/
             showLabel: {
                 type: Boolean,
                 value: false
             },
+			/**
+			* Auto detect battery level, rather than static unput
+			*
+			* @attribute autodetect
+			* @type Boolean
+			* @default false
+			*/
             autodetect: {
-                type: Boolean
+                type: Boolean,
+				value: false
             },
+			/**
+			* Container for battery level value
+			*
+			* @attribute level
+			* @type Number
+			* @default NULL
+			*/
             level: {
                 type: Number
             },
+			/**
+			* Detects if device is charging (Only works with autodetect)
+			*
+			* @attribute charging
+			* @type Boolean
+			* @default false
+			*/
             charging: {
                 type: Boolean,
                 value: false
             },
-            // Battery charging time in seconds
+			/**
+			* Battery charging time in seconds
+			*
+			* @attribute chargingtime
+			* @type Number
+			* @default NULL
+			*/
             chargingtime: {
                 type: Number
             },
-            // Battery discharging time in seconds
+			/**
+			* Battery discharging time in seconds
+			*
+			* @attribute dischargingtime
+			* @type Number
+			* @default NULL
+			*/
             dischargingtime: {
                 type: Number
             },
+			/**
+			* Container for battery level icon name
+			*
+			* @attribute icon
+			* @type String
+			* @default device:battery-unknown
+			*/
             icon: {
                 type: String,
                 value: "device:battery-unknown",
@@ -83,11 +147,17 @@
 
             }.bind(this));
         },
+		/**
+		* Adds percent sign to end of level value
+		*/
         getLabel: function (level) {
             if (level === undefined || level === null)
                 return "";
-            return level + " %";
+            return level + "%";
         },
+		/**
+		* Calculate which icon suits needs best
+		*/
         calculateIcon: function (level, charging) {
             var value = "device:battery-";
             if (this.charging)

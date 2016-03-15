@@ -2,194 +2,236 @@
 <link rel="import" href="../iron-icons/device-icons.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <!--
-__Example:__
+  ### Example:
 
-    <paper-material>
-      <h1>No Label</h1>
       <battery-status-icon></battery-status-icon>
       <battery-status-icon level="33" charging></battery-status-icon>
       <battery-status-icon level="15" show-label></battery-status-icon>
-      <battery-status-icon level="66"></battery-status-icon>
-      <battery-status-icon autodetect show-label></battery-status-icon>
-    </paper-material>
+      <battery-status-icon level="66" color-levels></battery-status-icon>
+      <battery-status-icon autodetect show-label color-levels></battery-status-icon>
+      
+  ### Styling
+    
+  The following custom properties are available for styling:
+  
+Custom property | Description | Default
+----------------|-------------|----------
+`--battery-default-color` | Color of battery when colorLevels is false. | `#323`
+`--battery-high-color` | Color of battery when above 80%. | `Green`
+`--battery-mid-color` | Color of batter when between 80% >< 20%. | `Orange`
+`--battery-low-color` | Color batter when below 20%. | `Red`
 
-@element battery-status-icon
-@demo demo/index.html
+  @element battery-status-icon
+  @demo demo/index.html
 -->
 <dom-module id="battery-status-icon">
-    <style>
-        :host {
-            display: block;
-        }
-		.label {
-			top: 2px;
-			position: relative;
-			font-family: "Roboto Condensed", sans-serif;
-		}
-    </style>
-    <template>
-        <div>
-            <iron-icon icon="[[icon]]"></iron-icon>
-            <span class="label" hidden$="[[!showLabel]]">{{label}}</span></div>
-    </template>
+  <style>
+    :host {
+    display: block;
+    }
+    .label {
+    top: 2px;
+    position: relative;
+    font-family: "Roboto Condensed", sans-serif;
+    }
+    iron-icon[id="default"] {
+      color: var(--battery-default-color, #323);
+    }
+    iron-icon[id="high"] {
+      color: var(--battery-high-color, Green);
+    }
+    iron-icon[id="mid"] {
+      color: var(--battery-mid-color, Orange);
+    }
+    iron-icon[id="low"] {
+      color: var(--battery-low-color, Red);
+    }
+  </style>
+  <template>
+    <div>
+    <iron-icon id="[[_batteryLevel]]" icon="[[_iconName]]"></iron-icon>
+    <span class="label" hidden$="[[!showLabel]]">{{getLabel(level)}}</span></div>
+  </template>
 </dom-module>
 <script>
-    Polymer({
-        is: 'battery-status-icon',
-        properties: {
-			/**
-			* Shows label if true (set to true with show-label)
-			*
-			* @attribute showLabel
-			* @type Boolean
-			* @default false
-			*/
-            showLabel: {
-                type: Boolean,
-                value: false
-            },
-			/**
-			* Auto detect battery level, rather than static unput
-			*
-			* @attribute autodetect
-			* @type Boolean
-			* @default false
-			*/
-            autodetect: {
-                type: Boolean,
-				value: false
-            },
-			/**
-			* Container for battery level value
-			*
-			* @attribute level
-			* @type Number
-			* @default NULL
-			*/
-            level: {
-                type: Number,
-                notify: true
-            },
-			/**
-			* Detects if device is charging (Only works with autodetect)
-			*
-			* @attribute charging
-			* @type Boolean
-			* @default false
-			*/
-            charging: {
-                type: Boolean,
-                value: false,
-                notify: true
-            },
-			/**
-			* Battery charging time in seconds
-			*
-			* @attribute chargingtime
-			* @type Number
-			* @default NULL
-			*/
-            chargingtime: {
-                type: Number,
-                notify: true
-            },
-			/**
-			* Battery discharging time in seconds
-			*
-			* @attribute dischargingtime
-			* @type Number
-			* @default NULL
-			*/
-            dischargingtime: {
-                type: Number,
-                notify: true
-            },
-			/**
-			* Container for battery level icon name
-			*
-			* @attribute icon
-			* @type String
-			* @default device:battery-unknown
-			*/
-            icon: {
-                type: String,
-                value: 'device:battery-unknown',
-                computed: 'calculateIcon(level, charging)'
-            },
-            label: {
-                type: String,
-                computed: 'getLabel(level)'
-            }
-        },
-        ready: function () {
-            if (!navigator.getBattery) {
-                console.log('Battery Status API not supported.');
-                return;
-            }
+  Polymer({
+    is: 'battery-status-icon',
+    properties: {
+      /**
+      * Shows label if true (set to true with show-label)
+      *
+      * @attribute showLabel
+      * @type Boolean
+      * @default false
+      */
+      showLabel: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Change color depending on remaining battery level
+      *
+      * @attribute colorLevels
+      * @type Boolean
+      * @default false
+      */
+      colorLevels: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Auto detect battery level, rather than static unput
+      *
+      * @attribute autodetect
+      * @type Boolean
+      * @default false
+      */
+      autodetect: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Container for battery level value
+      *
+      * @attribute level
+      * @type Number
+      * @default NULL
+      */
+      level: {
+        type: Number
+      },
+      /**
+      * Detects if device is charging (Only works with autodetect)
+      *
+      * @attribute charging
+      * @type Boolean
+      * @default false
+      */
+      charging: {
+        type: Boolean,
+        value: false
+      },
+      /**
+      * Battery charging time in seconds
+      *
+      * @attribute chargingtime
+      * @type Number
+      * @default NULL
+      */
+      chargingtime: {
+        type: Number
+      },
+      /**
+      * Battery discharging time in seconds
+      *
+      * @attribute dischargingtime
+      * @type Number
+      * @default NULL
+      */
+      dischargingtime: {
+        type: Number
+      },
+      /**
+      * Container for battery level icon name
+      *
+      * @attribute _iconName
+      * @type String
+      * @default device:battery-unknown
+      */
+      _iconName: {
+        type: String,
+        value: "device:battery-unknown",
+        computed: "calculateIcon(level, charging)"
+      },
+      /**
+      * Container for battery level status (high,mid,low)
+      *
+      * @attribute _batteryLevel
+      * @type String
+      * @default default
+      */
+      _batteryLevel: {
+        type: String,
+        value: "default"
+      }
+    },
+    ready: function () {
+      if (!navigator.getBattery) {
+        console.log('Battery Status API not supported.');
+        return;
+      }
 
-            if (!this.autodetect) {
-                return;
-            }
+      if (!this.autodetect) {
+        return;
+      }
 
-            navigator.getBattery().then(function (battery) {
-                this.set('charging', battery.charging);
-                this.set('level', parseInt(battery.level * 100));
-                this.set('chargingtime', battery.chargingTime);
-                this.set('dischargingtime', battery.dischargingTime);
+      navigator.getBattery().then(function (battery) {
+        this.set('charging', battery.charging);
+        this.set('level', parseInt(battery.level * 100));
+        this.set('chargingtime', battery.chargingTime);
+        this.set('dischargingtime', battery.dischargingTime);
 
-                battery.addEventListener('chargingchange', function () {
-                    this.set('charging', battery.charging);
-                }.bind(this));
+        battery.addEventListener('chargingchange', function () {
+          this.set('charging', battery.charging);
+        }.bind(this));
 
-                battery.addEventListener('levelchange', function () {
-                    this.set('level', parseInt(battery.level * 100));
-                }.bind(this));
+        battery.addEventListener('levelchange', function () {
+          this.set('level', parseInt(battery.level * 100));
+        }.bind(this));
 
-                battery.addEventListener('chargingtimechange', function () {
-                    this.set('chargingtime', battery.chargingTime);
-                }.bind(this));
+        battery.addEventListener('chargingtimechange', function () {
+          this.set('chargingtime', battery.chargingTime);
+        }.bind(this));
 
-                battery.addEventListener('dischargingtimechange', function () {
-                    this.set('dischargingtime', battery.dischargingTime);
-                }.bind(this));
+        battery.addEventListener('dischargingtimechange', function () {
+          this.set('dischargingtime', battery.dischargingTime);
+        }.bind(this));
 
-            }.bind(this));
-        },
-		/**
-		* Adds percent sign to end of level value
-		*/
-        getLabel: function (level) {
-            if (level === undefined || level === null) {
-                return '';
-            }
-            return level + '%';
-        },
-		/**
-		* Calculate which icon suits needs best
-		*/
-        calculateIcon: function (level, charging) {
-            var value = 'device:battery-';
-            if (this.charging)
-                value += 'charging-';
-            if (this.level >= 95)
-                value += 'full';
-            else if (this.level >= 90)
-                value += 90;
-            else if (this.level >= 80)
-                value += 80;
-            else if (this.level >= 60)
-                value += 60;
-            else if (this.level >= 50)
-                value += 50;
-            else if (this.level >= 30)
-                value += 20;
-            else if (this.level >= 20)
-                value += 20;
-            else if (this.level >= 0)
-                value += 'alert';
-            else
-                value += 'unknown';
-            return value;
-        }
-    });
+      }.bind(this));
+    },
+    /**
+    * Adds percent sign to end of level value
+    */
+    getLabel: function (level) {
+      if (level === undefined || level === null)
+      return "";
+      return level + "%";
+    },
+    /**
+    * Calculate which icon suits needs best
+    */
+    calculateIcon: function (level, charging) {
+    $this = this;
+    var value = "device:battery-";
+      if (this.charging)
+        value += "charging-"
+      if (this.level >= 95)
+        value += "full",
+        $this.colorLevels&&($this._batteryLevel="high");
+      else if (this.level >= 90)
+        value += 90,
+        $this.colorLevels&&($this._batteryLevel = "high");
+      else if (this.level >= 80)
+        value += 80,
+        $this.colorLevels&&($this._batteryLevel = "high");
+      else if (this.level >= 60)
+        value += 60,
+        $this.colorLevels&&($this._batteryLevel = "mid");
+      else if (this.level >= 50)
+        value += 50,
+        $this.colorLevels&&($this._batteryLevel = "mid");
+      else if (this.level >= 30)
+        value += 30,
+        $this.colorLevels&&($this._batteryLevel = "mid");
+      else if (this.level >= 20)
+        value += 20,
+        $this.colorLevels&&($this._batteryLevel = "low");
+      else if (this.level >= 0)
+        value += "alert",
+        $this.colorLevels&&($this._batteryLevel = "low");
+      else
+        value += "unknown";
+      return value;
+    }
+  });
 </script>

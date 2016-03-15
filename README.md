@@ -16,7 +16,7 @@ bower i battery-status-icon -S
 <battery-status-icon autodetect show-label color-levels></battery-status-icon>
 ```
 
-![Preview](./battery-status-icon/master/preview.png)
+![Preview](https://raw.githubusercontent.com/Protoss78/battery-status-icon/master/preview.png)
 
 ### Styling
     

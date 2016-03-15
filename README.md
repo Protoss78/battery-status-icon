@@ -1,5 +1,5 @@
 # battery-status-icon
-A web component that detects and displays the current battery status as an icon. It uses Polymer 1.x and can autodetect current battery status using the new HTML5 Navigator.getBattery() API. But the battery level and charging status can also be set from the outside (e.g. in combination with Cordova and the battery plugin).
+A web component that autodetects and displays the current battery status as an icon. It uses Polymer 1.x and the new HTML5 Navigator.getBattery() API. Alternatively the battery level and charging status can also be set from the outside (e.g. in combination with Cordova and the battery plugin).
 
 Install:
 ```

@@ -14,10 +14,11 @@ bower i battery-status-icon -S
 <battery-status-icon level="15" show-label></battery-status-icon>
 <battery-status-icon level="66" color-levels></battery-status-icon>
 <battery-status-icon autodetect show-label color-levels></battery-status-icon>
-```      
-  ### Styling
+```
+
+### Styling
     
-  The following custom properties are available for styling:
+The following custom properties are available for styling:
   
 Custom property | Description | Default
 ----------------|-------------|----------

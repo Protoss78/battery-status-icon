@@ -16,6 +16,8 @@ bower i battery-status-icon -S
 <battery-status-icon autodetect show-label color-levels></battery-status-icon>
 ```
 
+![Preview](https://github.com/Protoss78/battery-status-icon/raw/master/preview.png)
+
 ### Styling
     
 The following custom properties are available for styling:
@@ -26,4 +28,3 @@ Custom property | Description | Default
 `--battery-high-color` | Color of battery when above 80%. | `Green`
 `--battery-mid-color` | Color of batter when between 80% >< 20%. | `Orange`
 `--battery-low-color` | Color batter when below 20%. | `Red`
-![Preview](https://github.com/Protoss78/battery-status-icon/raw/master/preview.png)

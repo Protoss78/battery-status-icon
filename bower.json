@@ -28,7 +28,8 @@
   ],
   "dependencies": {
     "iron-icons": "PolymerElements/iron-icons#~1.0.3",
-    "polymer": "Polymer/polymer#1.2.0"
+    "polymer": "Polymer/polymer#1.2.0",
+    "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.2"
   },
   "devDependencies": {
     "paper-card": "PolymerElements/paper-card#^1.1.1",

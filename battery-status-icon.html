@@ -259,7 +259,7 @@
       if ((!totalSeconds) || (totalSeconds == "Infinity") || (totalSeconds == 0)) {
         return '...';
       }
-      var hours   = Math.floor(totalSeconds / 3600),
+      var hours   = Math.floor(totalSeconds / 3600);
       var minutes = Math.floor((totalSeconds % 3600) / 60);
       return hours + ':' + minutes;
     },

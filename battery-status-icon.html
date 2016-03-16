@@ -260,7 +260,7 @@
         return '...';
       }
       var hours   = Math.floor(totalSeconds / 3600),
-          minutes = (totalSeconds % 3600) / 60;
+      var minutes = Math.floor((totalSeconds % 3600) / 60);
       return hours + ':' + minutes;
     },
     /**

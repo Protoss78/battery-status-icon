@@ -5,6 +5,8 @@ Install:
 ```
 bower i battery-status-icon -S
 ```
+### Docs and Demo
+![Can be found here.](http://protoss78.github.io/battery-status-icon/components/battery-status-icon/)
 
 ### Example:
 

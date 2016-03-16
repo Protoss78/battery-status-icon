@@ -12,27 +12,24 @@
     <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
     <style>
       body {
-        background-color: #fff;
+        background-color: #F9F9F9;
       }
-
       .container {
         width: 100%;
         text-align: center;
       }
-
       paper-card {
         text-align: left;
         padding: 1em;
         margin: 1em;
-        background-color: #F9F9F9;
       }
-
-      .horizontalpanel {
-        @apply(--layout-horizontal);
-      }
-
-      .flexme {
-        @apply(--layout-flex);
+    </style>
+    <style is="custom-style">
+      .changing-example {
+        --battery-low-color: #D32F2F;
+        --battery-mid-color: #F57C00;
+        --battery-high-color: #388E3C;
+        --battery-icon-size: 48px;
       }
     </style>
   </head>
@@ -119,10 +116,25 @@
                 <pre>&lt;battery-status-icon autodetect color-levels show-label&gt;&lt;/battery-status-icon&gt;</pre>
               </td>
             </tr>
+            <tr>
+              <td>This example uses custom styles<br>Updating the level using JS with colors</td>
+              <td>
+                <battery-status-icon class="changing-example" level="100" color-levels></battery-status-icon>
+              </td>
+              <td>
+                <pre>&lt;battery-status-icon class="changing-example" level="100" color-levels&gt;&lt;/battery-status-icon&gt;</pre>
+              </td>
+            </tr>
           </tbody>
         </table>
       </paper-card>
     </div>
+    <script>
+      setInterval(function() {
+        curLevel = document.querySelector(".changing-example").getAttribute("level");
+        nexLevel = curLevel > 0 ? curLevel - 10 : 100;
+        document.querySelector(".changing-example").setAttribute("level",nexLevel);
+      }, 300);
+    </script>
   </body>
-
 </html>

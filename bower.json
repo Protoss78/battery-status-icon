@@ -3,7 +3,8 @@
   "version": "0.0.5",
   "homepage": "https://github.com/Protoss78/battery-status-icon",
   "authors": [
-    "Roman Kaufmann <roman.kaufmann.at@gmail.com>"
+    "Roman Kaufmann <roman.kaufmann.at@gmail.com>",
+    "Andrew Bone (https://github.com/Link2Twenty)"
   ],
   "description": "A web component that detects and displays the current battery status as an icon. It uses Polymer 1.x and HTML5 Navigator.getBattery() API.",
   "main": "battery-status-icon.html",

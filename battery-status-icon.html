@@ -1,6 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-icons/device-icons.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
 <!--
   ### Example:
 
@@ -45,6 +47,20 @@
       display: block;
       --iron-icon-width: var(--battery-icon-size, 24px);
       --iron-icon-height: var(--battery-icon-size, 24px);
+      --paper-tooltip-background: var(--battery-label-background, #616161);
+      --paper-tooltip-opacity: var(--battery-label-opacity, 0.9);
+      --paper-tooltip-text-color: var(--battery-label-text-color, white); 
+    }
+    iron-icon[id="tooltip"] {
+      --iron-icon-width: 24px;
+      --iron-icon-height: 24px;
+    }
+    #battery-container {
+      width: var(--battery-icon-size, 24px);
+    }
+    .tooltip-icon {
+      float:left;
+      margin:-3px 0 0 -6px;
     }
     .label {
       top: 2px;
@@ -65,9 +81,18 @@
     }
   </style>
   <template>
-    <div>
-    <iron-icon id="[[_batteryLevel]]" icon="[[_iconName]]"></iron-icon>
-    <span class="label" hidden$="[[!showLabel]]">{{getLabel(level)}}</span></div>
+    <div id="battery-container"><iron-icon id="[[_batteryLevel]]" icon="[[_iconName]]"></iron-icon></div>
+    <paper-tooltip offset="1" position="{{labelPosition}}" hidden$="[[!showLabel]]" for="battery-container">
+      <span class="tooltip-icon">
+        <iron-icon id="tooltip" hidden$="[[!charging]]" icon="icons:trending-up"></iron-icon>
+        <iron-icon id="tooltip" hidden$="[[charging]]" icon="icons:trending-down"></iron-icon>
+      </span>
+      {{getLabel(level)}}
+      <br>
+      <span hidden$="[[!charging]]">{{convertTime(chargingtime)}}	&nbsp;</span>
+      <span hidden$="[[charging]]">{{convertTime(dischargingtime)}}	&nbsp;</span>
+    </paper-tooltip>  
+    <span class="label" hidden$="[[!showLabel]]"></span>
   </template>
 </dom-module>
 <script>
@@ -84,6 +109,17 @@
       showLabel: {
         type: Boolean,
         value: false
+      },
+      /**
+      * In which direction should the tooltip appear
+      *
+      * @attribute labelPosition
+      * @type String
+      * @default right
+      */
+      labelPosition: {
+        type: String,
+        value: "right"
       },
       /**
       * Change color depending on remaining battery level
@@ -136,7 +172,8 @@
       * @default NULL
       */
       chargingtime: {
-        type: Number
+        type: Number,
+        default: "0"
       },
       /**
       * Battery discharging time in seconds
@@ -146,7 +183,8 @@
       * @default NULL
       */
       dischargingtime: {
-        type: Number
+        type: Number,
+        default: "0"
       },
       /**
       * Container for battery level icon name
@@ -213,6 +251,17 @@
       if (level === undefined || level === null)
       return "";
       return level + "%";
+    },
+    /**
+    * Converts to human readable time
+    */
+    convertTime: function (totalSeconds) {
+      if ((!totalSeconds) || (totalSeconds == "Infinity") || (totalSeconds == 0)) {
+        return '...';
+      }
+      var hours   = Math.floor(totalSeconds / 3600),
+          minutes = (totalSeconds % 3600) / 60;
+      return hours + ':' + minutes;
     },
     /**
     * Calculate which icon suits needs best

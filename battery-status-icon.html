@@ -5,10 +5,10 @@
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 <!--
   ### Example:
-
       <battery-status-icon></battery-status-icon>
       <battery-status-icon level="33" charging></battery-status-icon>
       <battery-status-icon level="15" show-label></battery-status-icon>
+      <battery-status-icon level="50" show-label label-position="top"></battery-status-icon>
       <battery-status-icon level="66" color-levels></battery-status-icon>
       <battery-status-icon autodetect show-label color-levels></battery-status-icon>
       
@@ -23,6 +23,9 @@
   `--battery-high-color` | Color of battery when above 80%. | `Green`
   `--battery-mid-color` | Color of battery when between 80% >< 20%. | `Orange`
   `--battery-low-color` | Color battery when below 20%. | `Red`
+  `--battery-label-background` | Background color of tooltip label. | `#616161`
+  `--battery-label-opacity` | Opacity level of tooltip label. | `0.9`
+  `--battery-label-text-color` | Text color of tooltip label | `White`
   
   __Style example:__
   
@@ -35,9 +38,11 @@
           --battery-mid-color: #F57C00;
           --battery-high-color: #388E3C;
           --battery-icon-size: 48px;
+          --battery-label-background: #455A64;
+          --battery-label-opacity: 1;
+          --battery-label-text-color: #CFD8DC;
         }
       </style>
-
   @element battery-status-icon
   @demo demo/index.html
 -->
@@ -57,10 +62,6 @@
     }
     #battery-container {
       width: var(--battery-icon-size, 24px);
-    }
-    .tooltip-icon {
-      float:left;
-      margin:-3px 0 0 -6px;
     }
     .label {
       top: 2px;
@@ -83,14 +84,20 @@
   <template>
     <div id="battery-container"><iron-icon id="[[_batteryLevel]]" icon="[[_iconName]]"></iron-icon></div>
     <paper-tooltip offset="1" position="{{labelPosition}}" hidden$="[[!showLabel]]" for="battery-container">
-      <span class="tooltip-icon">
-        <iron-icon id="tooltip" hidden$="[[!charging]]" icon="icons:trending-up"></iron-icon>
-        <iron-icon id="tooltip" hidden$="[[charging]]" icon="icons:trending-down"></iron-icon>
-      </span>
-      {{getLabel(level)}}
-      <br>
-      <span hidden$="[[!charging]]">{{convertTime(chargingtime)}}	&nbsp;</span>
-      <span hidden$="[[charging]]">{{convertTime(dischargingtime)}}	&nbsp;</span>
+    <table>
+        <tr>
+          <td>
+            <iron-icon id="tooltip" hidden$="[[!charging]]" icon="icons:trending-up"></iron-icon>
+            <iron-icon id="tooltip" hidden$="[[charging]]" icon="icons:trending-down"></iron-icon>
+          </td>
+          <td>
+            {{_getLabel(level)}}
+            <br>
+            <span hidden$="[[!charging]]">{{_convertTime(chargingtime)}}</span>
+            <span hidden$="[[charging]]">{{_convertTime(dischargingtime)}}</span>
+          </td>
+        <tr>
+      </table>
     </paper-tooltip>  
     <span class="label" hidden$="[[!showLabel]]"></span>
   </template>
@@ -196,7 +203,7 @@
       _iconName: {
         type: String,
         value: "device:battery-unknown",
-        computed: "calculateIcon(level, charging)"
+        computed: "_calculateIcon(level, charging)"
       },
       /**
       * Container for battery level status (high,mid,low)
@@ -215,39 +222,32 @@
         console.log('Battery Status API not supported.');
         return;
       }
-
       if (!this.autodetect) {
         return;
       }
-
       navigator.getBattery().then(function (battery) {
         this.set('charging', battery.charging);
         this.set('level', parseInt(battery.level * 100));
         this.set('chargingtime', battery.chargingTime);
         this.set('dischargingtime', battery.dischargingTime);
-
         battery.addEventListener('chargingchange', function () {
           this.set('charging', battery.charging);
         }.bind(this));
-
         battery.addEventListener('levelchange', function () {
           this.set('level', parseInt(battery.level * 100));
         }.bind(this));
-
         battery.addEventListener('chargingtimechange', function () {
           this.set('chargingtime', battery.chargingTime);
         }.bind(this));
-
         battery.addEventListener('dischargingtimechange', function () {
           this.set('dischargingtime', battery.dischargingTime);
         }.bind(this));
-
       }.bind(this));
     },
     /**
     * Adds percent sign to end of level value
     */
-    getLabel: function (level) {
+    _getLabel: function (level) {
       if (level === undefined || level === null)
       return "";
       return level + "%";
@@ -255,18 +255,20 @@
     /**
     * Converts to human readable time
     */
-    convertTime: function (totalSeconds) {
+    _convertTime: function (totalSeconds) {
       if ((!totalSeconds) || (totalSeconds == "Infinity") || (totalSeconds == 0)) {
-        return '...';
+        return '';
       }
       var hours   = Math.floor(totalSeconds / 3600);
       var minutes = Math.floor((totalSeconds % 3600) / 60);
+      hours = hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
       return hours + ':' + minutes;
     },
     /**
     * Calculate which icon suits needs best
     */
-    calculateIcon: function (level, charging) {
+    _calculateIcon: function (level, charging) {
     $this = this;
     var value = "device:battery-";
       if (this.charging)

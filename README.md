@@ -46,6 +46,7 @@ Attribute | Description | Default
   `--battery-label-background` | Background color of tooltip label. | `#616161`
   `--battery-label-opacity` | Opacity level of tooltip label. | `0.9`
   `--battery-label-text-color` | Text color of tooltip label | `White`
+  `--battery-icon-rotate` | Use rotate(x) to rotate the battery icon.<br>Sample: --battery-icon-rotate: rotate(270deg); | `rotate(0deg)`
   
   __Style example:__
   
@@ -62,6 +63,16 @@ Attribute | Description | Default
       --battery-label-background: #455A64;
       --battery-label-opacity: 1;
       --battery-label-text-color: #CFD8DC;
+    }
+    
+    /* Battery Icon is rotated by 270° (left to right) */
+    .left-to-right {
+      --battery-icon-rotate: rotate(270deg);
+    }
+    
+    /* Battery Icon is rotated by 90° (right to left) */
+    .right-to-left {
+      --battery-icon-rotate: rotate(90deg);
     }
   </style>
 ```

@@ -64,6 +64,15 @@
   
   #battery-container {
     width: var(--battery-icon-size, 24px);
+    -moz-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* Firefox */
+    -o-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* Opera */
+    -ms-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* IE 9 */
+    -webkit-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* Chrome, Safari, Opera */
+    transform: var(--battery-icon-rotate, rotate(0deg));
   }
   
   .label {

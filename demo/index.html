@@ -34,6 +34,10 @@
         --battery-label-opacity: 1;
         --battery-label-text-color: #CFD8DC;
       }
+      /* Battery Icon is rotated by 270° (left to right) */
+      .rotation-sample {
+        --battery-icon-rotate: rotate(270deg);
+      }
     </style>
   </head>
 
@@ -114,6 +118,15 @@
               <td>Autodetect using Navigator.getBattery() API<br>with label and colors</td>
               <td>
                 <battery-status-icon autodetect color-levels show-label></battery-status-icon>
+              </td>
+              <td>
+                <pre>&lt;battery-status-icon autodetect color-levels show-label&gt;&lt;/battery-status-icon&gt;</pre>
+              </td>
+            </tr>
+            <tr>
+              <td>Rotate 270° and autodetect using Navigator.getBattery() API<br>with label and colors</td>
+              <td>
+                <battery-status-icon class="rotation-sample" autodetect color-levels show-label></battery-status-icon>
               </td>
               <td>
                 <pre>&lt;battery-status-icon autodetect color-levels show-label&gt;&lt;/battery-status-icon&gt;</pre>

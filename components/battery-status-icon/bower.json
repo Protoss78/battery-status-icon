@@ -1,0 +1,42 @@
+{
+  "name": "battery-status-icon",
+  "version": "0.0.5",
+  "homepage": "https://github.com/Protoss78/battery-status-icon",
+  "authors": [
+    "Roman Kaufmann <roman.kaufmann.at@gmail.com>",
+    "Andrew Bone (https://github.com/Link2Twenty)"
+  ],
+  "description": "A web component that detects and displays the current battery status as an icon. It uses Polymer 1.x and HTML5 Navigator.getBattery() API.",
+  "main": "battery-status-icon.html",
+  "keywords": [
+    "battery",
+    "status",
+    "icon",
+    "polymer",
+    "web",
+    "component",
+    "web component",
+    "web-components"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-icons": "PolymerElements/iron-icons#~1.0.3",
+    "polymer": "Polymer/polymer#1.2.0",
+    "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.2"
+  },
+  "devDependencies": {
+    "paper-card": "PolymerElements/paper-card#^1.1.1",
+    "web-component-tester": "Polymer/web-component-tester#^4.2.1",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.4"
+  },
+  "resolutions": {
+    "polymer": "^1.2.1"
+  }
+}

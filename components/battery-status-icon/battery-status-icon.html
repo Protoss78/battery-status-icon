@@ -1,0 +1,335 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/device-icons.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<!--
+  ### Example:
+      <battery-status-icon></battery-status-icon>
+      <battery-status-icon level="33" charging></battery-status-icon>
+      <battery-status-icon level="15" show-label></battery-status-icon>
+      <battery-status-icon level="50" show-label label-position="top"></battery-status-icon>
+      <battery-status-icon level="66" color-levels></battery-status-icon>
+      <battery-status-icon autodetect show-label color-levels></battery-status-icon>
+      
+  ### Styling
+    
+  The following custom properties are available for styling:
+  
+  Custom property | Description | Default
+  ----------------|-------------|----------
+  `--battery-icon-size` | Size of battery icon displayed. | `24px`
+  `--battery-default-color` | Color of battery when colorLevels is false. | `#323`
+  `--battery-high-color` | Color of battery when above 80%. | `Green`
+  `--battery-mid-color` | Color of battery when between 80% >< 20%. | `Orange`
+  `--battery-low-color` | Color battery when below 20%. | `Red`
+  `--battery-label-background` | Background color of tooltip label. | `#616161`
+  `--battery-label-opacity` | Opacity level of tooltip label. | `0.9`
+  `--battery-label-text-color` | Text color of tooltip label | `White`
+  `--battery-icon-rotate` | Use rotate(x) to rotate the battery icon.<br>Sample: --battery-icon-rotate: rotate(270deg); | `rotate(0deg)`
+  
+  __Style example:__
+  
+  This part of the code needs to be within your head tags, or imported as part of your app-theme.html
+  
+      <style is="custom-style">
+        :root {
+          --battery-default-color: #455A64;
+          --battery-low-color: #D32F2F;
+          --battery-mid-color: #F57C00;
+          --battery-high-color: #388E3C;
+          --battery-icon-size: 48px;
+          --battery-label-background: #455A64;
+          --battery-label-opacity: 1;
+          --battery-label-text-color: #CFD8DC;
+        }
+
+        /* Battery Icon is rotated by 270° (left to right) */
+        .left-to-right {
+          --battery-icon-rotate: rotate(270deg);
+        }   
+    
+        /* Battery Icon is rotated by 90° (right to left) */
+        .right-to-left {
+          --battery-icon-rotate: rotate(90deg);
+        }
+      </style>
+  @element battery-status-icon
+  @demo demo/index.html
+-->
+<dom-module id="battery-status-icon">
+  <style>
+  :host {
+    display: block;
+    --iron-icon-width: var(--battery-icon-size, 24px);
+    --iron-icon-height: var(--battery-icon-size, 24px);
+    --paper-tooltip-background: var(--battery-label-background, #616161);
+    --paper-tooltip-opacity: var(--battery-label-opacity, 0.9);
+    --paper-tooltip-text-color: var(--battery-label-text-color, white);
+  }
+  
+  iron-icon[id="tooltip"] {
+    --iron-icon-width: 24px;
+    --iron-icon-height: 24px;
+  }
+  
+  #battery-container {
+    width: var(--battery-icon-size, 24px);
+    -moz-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* Firefox */
+    -o-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* Opera */
+    -ms-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* IE 9 */
+    -webkit-transform: var(--battery-icon-rotate, rotate(0deg));
+    /* Chrome, Safari, Opera */
+    transform: var(--battery-icon-rotate, rotate(0deg));
+  }
+  
+  .label {
+    top: 2px;
+    position: relative;
+    font-family: "Roboto Condensed", sans-serif;
+  }
+  
+  iron-icon[id="default"] {
+    color: var(--battery-default-color, #323);
+  }
+  
+  iron-icon[id="high"] {
+    color: var(--battery-high-color, Green);
+  }
+  
+  iron-icon[id="mid"] {
+    color: var(--battery-mid-color, Orange);
+  }
+  
+  iron-icon[id="low"] {
+    color: var(--battery-low-color, Red);
+  }
+  </style>
+  <template>
+    <div id="battery-container">
+      <iron-icon id="[[_batteryLevel]]" icon="[[_iconName]]"></iron-icon>
+    </div>
+    <paper-tooltip offset="1" position="{{labelPosition}}" hidden$="[[!showLabel]]" for="battery-container">
+      <table>
+        <tr>
+          <td>
+            <iron-icon id="tooltip" hidden$="[[!charging]]" icon="icons:trending-up"></iron-icon>
+            <iron-icon id="tooltip" hidden$="[[charging]]" icon="icons:trending-down"></iron-icon>
+          </td>
+          <td>
+            {{_getLabel(level)}}
+            <br>
+            <span hidden$="[[!charging]]">{{_convertTime(chargingtime)}}</span>
+            <span hidden$="[[charging]]">{{_convertTime(dischargingtime)}}</span>
+          </td>
+          <tr>
+      </table>
+    </paper-tooltip>
+    <span class="label" hidden$="[[!showLabel]]"></span>
+  </template>
+</dom-module>
+<script>
+Polymer({
+  is: 'battery-status-icon',
+  properties: {
+    /**
+     * Shows label if true (set to true with show-label)
+     *
+     * @attribute showLabel
+     * @type Boolean
+     * @default false
+     */
+    showLabel: {
+      type: Boolean,
+      value: false
+    },
+    /**
+     * In which direction should the tooltip appear
+     *
+     * @attribute labelPosition
+     * @type String
+     * @default right
+     */
+    labelPosition: {
+      type: String,
+      value: "right"
+    },
+    /**
+     * Change color depending on remaining battery level
+     *
+     * @attribute colorLevels
+     * @type Boolean
+     * @default false
+     */
+    colorLevels: {
+      type: Boolean,
+      value: false
+    },
+    /**
+     * Auto detect battery level, rather than static unput
+     *
+     * @attribute autodetect
+     * @type Boolean
+     * @default false
+     */
+    autodetect: {
+      type: Boolean,
+      value: false
+    },
+    /**
+     * Container for battery level value
+     *
+     * @attribute level
+     * @type Number
+     * @default NULL
+     */
+    level: {
+      type: Number
+    },
+    /**
+     * Detects if device is charging (Only works with autodetect)
+     *
+     * @attribute charging
+     * @type Boolean
+     * @default false
+     */
+    charging: {
+      type: Boolean,
+      value: false
+    },
+    /**
+     * Battery charging time in seconds
+     *
+     * @attribute chargingtime
+     * @type Number
+     * @default NULL
+     */
+    chargingtime: {
+      type: Number,
+      default: "0"
+    },
+    /**
+     * Battery discharging time in seconds
+     *
+     * @attribute dischargingtime
+     * @type Number
+     * @default NULL
+     */
+    dischargingtime: {
+      type: Number,
+      default: "0"
+    },
+    /**
+     * Container for battery level icon name
+     *
+     * @attribute _iconName
+     * @type String
+     * @default device:battery-unknown
+     */
+    _iconName: {
+      type: String,
+      value: "device:battery-unknown",
+      computed: "_calculateIcon(level, charging)"
+    },
+    /**
+     * Container for battery level status (high,mid,low)
+     *
+     * @attribute _batteryLevel
+     * @type String
+     * @default default
+     */
+    _batteryLevel: {
+      type: String,
+      value: "default"
+    }
+  },
+  ready: function() {
+    if (!navigator.getBattery) {
+      console.log('Battery Status API not supported.');
+      return;
+    }
+    if (!this.autodetect) {
+      return;
+    }
+    navigator.getBattery().then(function(battery) {
+      this.set('charging', battery.charging);
+      this.set('level', parseInt(battery.level * 100));
+      this.set('chargingtime', battery.chargingTime);
+      this.set('dischargingtime', battery.dischargingTime);
+      battery.addEventListener('chargingchange', function() {
+        this.set('charging', battery.charging);
+      }.bind(this));
+      battery.addEventListener('levelchange', function() {
+        this.set('level', parseInt(battery.level * 100));
+      }.bind(this));
+      battery.addEventListener('chargingtimechange', function() {
+        this.set('chargingtime', battery.chargingTime);
+      }.bind(this));
+      battery.addEventListener('dischargingtimechange', function() {
+        this.set('dischargingtime', battery.dischargingTime);
+      }.bind(this));
+    }.bind(this));
+  },
+  /**
+   * Adds percent sign to end of level value
+   */
+  _getLabel: function(level) {
+    if (level === undefined || level === null)
+      return "";
+    return level + "%";
+  },
+  /**
+   * Converts to human readable time
+   */
+  _convertTime: function(totalSeconds) {
+    if ((!totalSeconds) || (totalSeconds == "Infinity") || (totalSeconds == 0)) {
+      return '';
+    }
+    var hours = Math.floor(totalSeconds / 3600);
+    var minutes = Math.floor((totalSeconds % 3600) / 60);
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    return hours + ':' + minutes;
+  },
+  /**
+   * Calculate which icon suits needs best
+   */
+  _calculateIcon: function(level, charging) {
+    $this = this;
+    var value = "device:battery-";
+    if (this.charging)
+      value += "charging-"
+    if (this.level >= 95)
+      value += "full",
+      $this.colorLevels && ($this._batteryLevel = "high");
+    else if (this.level >= 90)
+      value += 90,
+      $this.colorLevels && ($this._batteryLevel = "high");
+    else if (this.level >= 80)
+      value += 80,
+      $this.colorLevels && ($this._batteryLevel = "high");
+    else if (this.level >= 60)
+      value += 60,
+      $this.colorLevels && ($this._batteryLevel = "mid");
+    else if (this.level >= 50)
+      value += 50,
+      $this.colorLevels && ($this._batteryLevel = "mid");
+    else if (this.level >= 30)
+      value += 30,
+      $this.colorLevels && ($this._batteryLevel = "mid");
+    else if (this.level >= 20)
+      value += 20,
+      $this.colorLevels && ($this._batteryLevel = "low");
+    else if (this.level >= 0)
+      !($this.charging) && (value += "alert"),
+      ($this.charging) && (value += "full"),
+      $this.colorLevels && ($this._batteryLevel = "low");
+    else
+      value += "unknown";
+    return value;
+  }
+});
+</script>

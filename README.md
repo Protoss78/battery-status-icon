@@ -59,21 +59,28 @@ Attribute | Description | Default
   
   __Style example:__
   
-  This part of the code needs to be within your head tags, or imported as part of your app-theme.html
-  
-  ```html
-  <style is="custom-style">
-    :root {
-      --battery-default-color: #455A64;
-      --battery-low-color: #D32F2F;
-      --battery-mid-color: #F57C00;
-      --battery-high-color: #388E3C;
-      --battery-icon-size: 48px;
-      --battery-label-background: #455A64;
-      --battery-label-opacity: 1;
-      --battery-label-text-color: #CFD8DC;
+<!---
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="battery-status-icon.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<style>
+    .changing-example {
+        --battery-low-color: #D32F2F;
+        --battery-mid-color: #F57C00;
+        --battery-high-color: #388E3C;
+        --battery-icon-size: 48px;
+        --battery-label-background: #455A64;
+        --battery-label-opacity: 1;
+        --battery-label-text-color: #CFD8DC;
     }
-    
     /* Battery Icon is rotated by 270° (left to right) */
     .left-to-right {
       --battery-icon-rotate: rotate(270deg);
@@ -83,5 +90,9 @@ Attribute | Description | Default
     .right-to-left {
       --battery-icon-rotate: rotate(90deg);
     }
-  </style>
-```
+</style>
+<battery-status-icon label-position="bottom" class="changing-example" level="0" color-levels
+                     charging show-label></battery-status-icon>                               
+<battery-status-icon class="left-to-right" autodetect show-label color-levels></battery-status-icon>
+<battery-status-icon class="right-to-left" autodetect show-label color-levels></battery-status-icon>
+```  

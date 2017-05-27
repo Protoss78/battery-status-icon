@@ -247,6 +247,18 @@
                 type: String,
                 value: "default"
             }
+            /**
+             * Fired when the battery `level` changes its value.
+             *
+             * @event level-changed
+             * @param {number} the new battery level.
+             */
+            /**
+             * Fired when the battery state `charging` changes its value.
+             *
+             * @event charging-changed
+             * @param {boolean} true when battery is charging.
+             */
         },
         ready: function () {
             if (!navigator.getBattery) {

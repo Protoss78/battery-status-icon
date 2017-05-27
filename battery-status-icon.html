@@ -187,7 +187,8 @@
              * @default NULL
              */
             level: {
-                type: Number
+                type: Number,
+                notify: true
             },
             /**
              * Detects if device is charging (Only works with autodetect)
@@ -198,7 +199,8 @@
              */
             charging: {
                 type: Boolean,
-                value: false
+                value: false,
+                notify: true
             },
             /**
              * Battery charging time in seconds
